@@ -143,6 +143,7 @@ build/default/production/_ext/1688732426/system_interrupt.o: \
  ../../../../../../framework/driver/tmr/drv_tmr_compatibility.h \
  ../../../../../../framework/system/ports/sys_ports.h \
  ../../../../../../framework/system/ports/sys_ports_definitions.h \
+ ../../../../../../bsp/pic32mx_skes/Mc32DriverAdc.h \
  ../src/system_config/default/system_definitions.h
 
 ../../../../../../framework/system/common/sys_common.h:
@@ -432,5 +433,7 @@ build/default/production/_ext/1688732426/system_interrupt.o: \
 ../../../../../../framework/system/ports/sys_ports.h:
 
 ../../../../../../framework/system/ports/sys_ports_definitions.h:
+
+../../../../../../bsp/pic32mx_skes/Mc32DriverAdc.h:
 
 ../src/system_config/default/system_definitions.h:

@@ -244,6 +244,7 @@
         <Name dnOrder="0">system_interrupt.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/default</Path>
         <Checksum dnOrder="2">EBC155EDEDE13537DE01590638626734</Checksum>
+        <ProjectFileChecksum dnOrder="3">85C43BFF77D0EE3B51C663353B50193A</ProjectFileChecksum>
       </Template>
       <Template dnOrder="17">
         <Name dnOrder="0">sys_clk_pic32mx.c</Name>

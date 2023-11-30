@@ -59,6 +59,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "system_config.h"
 #include "system_definitions.h"
 
+#include "Mc32DriverAdc.h"
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -88,6 +90,7 @@ typedef enum
 {
 	/* Application's state machine's initial state. */
 	APP_STATE_INIT=0,
+    APP_STATE_WAIT,
 	APP_STATE_SERVICE_TASKS,
 
 	/* TODO: Define states used by the application state machine. */
@@ -112,6 +115,9 @@ typedef struct
 {
     /* The application's current state */
     APP_STATES state;
+    
+    //Structure ADC
+    S_ADCResults AdcRes;
 
     /* TODO: Define any additional data used by the application. */
 
@@ -197,6 +203,12 @@ void APP_Initialize ( void );
  */
 
 void APP_Tasks( void );
+
+//Fonction mise à jour de l'état
+void APP_UpdateState (APP_STATES NewState );
+
+//Prototype fonction chenillad
+void Chenillard (void);
 
 
 #endif /* _APP_H */

@@ -54,6 +54,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 #include "app.h"
+#include "Mc32DriverLcd.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -97,7 +98,6 @@ APP_DATA appData;
 /* TODO:  Add any necessary local functions.
 */
 
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Application Initialization and State Machine Functions
@@ -123,7 +123,6 @@ void APP_Initialize ( void )
      */
 }
 
-
 /******************************************************************************
   Function:
     void APP_Tasks ( void )
@@ -141,21 +140,77 @@ void APP_Tasks ( void )
         /* Application's initial state. */
         case APP_STATE_INIT:
         {
-            bool appInitialized = true;
-       
-        
-            if (appInitialized)
-            {
+            //Initialisation de LCD
+            lcd_init();
+            lcd_bl_on();
             
-                appData.state = APP_STATE_SERVICE_TASKS;
-            }
-            break;
+            //Ecriture sur la première ligne
+            lcd_gotoxy(1,1);
+            printf_lcd("TP0 LED + AD 2023-24" );
+            
+            //Ecriture sur la deuxième ligne
+            lcd_gotoxy(1,2);
+            printf_lcd("Subramaniyam");
+            
+            //Initialisation de ADC
+            BSP_InitADC10();
+            
+            //Allumer tous les LEDs
+            LED0_W = 0;
+            LED1_W = 0;
+            LED2_W = 0;
+            LED3_W = 0;
+            LED4_W = 0;
+            LED5_W = 0;
+            LED6_W = 0;
+            LED7_W = 0;
+
+            //Démarrer le timer
+            DRV_TMR0_Start();
+             
+            //Passer dans l'état WAIT
+            appData.state = APP_STATE_WAIT;
+            
+           break;
+        }
+        
+        case APP_STATE_WAIT:
+        {
+            //Ne rien faire
+           break;
         }
 
         case APP_STATE_SERVICE_TASKS:
         {
+            //Eteindre les leds
+            static bool Offled = true;
+            if (Offled)
+            {
+             BSP_LEDOff(BSP_LED_0);
+             BSP_LEDOff(BSP_LED_1);
+             BSP_LEDOff(BSP_LED_2);
+             BSP_LEDOff(BSP_LED_3);
+             BSP_LEDOff(BSP_LED_4);
+             BSP_LEDOff(BSP_LED_5);
+             BSP_LEDOff(BSP_LED_6);
+             BSP_LEDOff(BSP_LED_7);
+             Offled = false;
+            } 
+            
+            //Lecture des ADC
+            appData.AdcRes = BSP_ReadAllADC();
+            
+            //Afficher sur la 3ème ligne 
+            lcd_gotoxy(1,3);
+            printf_lcd("Ch0 %4d Ch1 %4d ",appData.AdcRes.Chan0 ,appData.AdcRes.Chan1);
+
+            //Appel de fonction chenillard
+            Chenillard ();
+            
+            //Passer dans l'état WAIT
+             appData.state = APP_STATE_WAIT;
         
-            break;
+           break;
         }
 
         /* TODO: implement your application state machine.*/
@@ -170,7 +225,90 @@ void APP_Tasks ( void )
     }
 }
 
- 
+void APP_UpdateState (APP_STATES NewState )
+{
+    appData.state = NewState;
+}
+
+void Chenillard (void)
+{
+    static uint32_t i = 0;
+    
+    switch (i)
+    {
+        case 0 : 
+        {
+            BSP_LEDOff(BSP_LED_7);
+            BSP_LEDOn(BSP_LED_0);
+            i++;
+           break;
+        }
+        
+        case 1 : 
+        {
+            LED0_W = 1;
+            LED1_W = 0;
+            i++;
+           break;
+        }
+        
+        case 2 : 
+        {
+            LED1_W = 1;
+            LED2_W = 0;
+            i++;
+           break;
+        }
+                
+        case 3 : 
+        {
+            LED2_W = 1;
+            LED3_W = 0;
+            i++;
+           break;
+        }
+                        
+        case 4 : 
+        {
+            LED3_W = 1;
+            LED4_W = 0;
+            i++;
+           break;
+        }
+                                
+        case 5 : 
+        {
+            LED4_W = 1;
+            LED5_W = 0;
+            i++;
+           break;
+        }
+                                        
+        case 6 : 
+        {
+            LED5_W = 1;
+            LED6_W = 0;
+            i++;
+           break;
+        }
+                                                
+        case 7 : 
+        {
+            LED6_W = 1;
+            LED7_W = 0;
+            i++;
+           break;
+        }
+        
+         /* The default state should never be executed. */
+        default:
+        {
+            i = 0;
+            /* TODO: Handle error in application's state machine. */
+           break;
+        }
+    }
+}
 
 /*******************************************************************************
  End of File
